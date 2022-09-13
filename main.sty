@@ -1,0 +1,186 @@
+\ProvidesPackage{homework}
+
+% Warn about obsolete commands, classes and packages
+\RequirePackage[l2tabu, orthodox]{nag}
+
+% Layout of document
+\usepackage[a4paper,margin=1in]{geometry}
+\setlength{\marginparwidth}{2cm} 
+
+% Scale fonts
+\usepackage{anyfontsize}
+
+% Improves spacing between words
+\usepackage{microtype}
+
+% ams math stuff, theorem/proof environment, etc.
+\usepackage{mathtools, amsthm, thmtools, amssymb, amsfonts, mathrsfs}
+\usepackage{xcolor}
+
+
+% Indent first line of paragraph after section, chapter, etc. start
+\usepackage{indentfirst}
+
+% Show keys of \label when document in draft mode
+\usepackage[notref, notcite, color]{showkeys}
+
+% Draft mode stuff
+\usepackage{ifdraft, xparse}
+\ifdraft{
+    \usepackage{draftwatermark}
+    \SetWatermarkAngle{90}
+    \SetWatermarkFontSize{2cm}
+    \SetWatermarkHorCenter{1cm}
+    }{} % sets DRAFT watermark along margins in draft mode
+
+
+% For typing syntax-highlighted source code
+\usepackage[final]{minted}
+
+% For enumerate environment. inline option allows for inline enumerate
+% for starred environment \begin{enumerate*}\item ... \end{enumerate}
+\usepackage[inline]{enumitem}
+
+% For captions
+\usepackage{caption, subcaption}
+
+% For improved tables
+\usepackage{tabularx}
+\usepackage{booktabs, multicol, multirow, adjustbox, blkarray}
+
+% Horizontal fraction formatting using \sfrac{num}{den}
+\usepackage{xfrac}
+\UseCollection{xfrac}{plainmath}
+
+% Fix for xfrac bug
+\renewcommand{\sfrac}[2]{#1/#2}
+
+% Improved formatting for \left ... \right pairs
+\usepackage{mleftright}
+\mleftright
+
+% Theorem environment setup
+\usepackage{tikz, amssymb, tcolorbox}
+\usetikzlibrary{positioning}
+\tcbuselibrary{theorems, skins, breakable}
+% Exercise environment --- mandatory argument for exercise number
+\newcommand{\exercisenumber}{}
+\newtcbtheorem{exercisebase}{Exercise \exercisenumber}{breakable, colframe=red!35!black,fonttitle=\bfseries, separator sign={~\(\blacktriangleright\)}}{exe}
+\newenvironment{exercise}[1]{\renewcommand{\exercisenumber}{#1}\begin{exercisebase*}{}}{\end{exercisebase*}}
+
+% Footnote stuff for theorem boxes. If footnote in theorem, place \savenotes before
+% environment and \spewnotes after.
+\usepackage{footnote}
+\renewcommand{\thempfootnote}{\arabic{mpfootnote}}
+
+% Pseudocode 
+\usepackage{algorithm}
+\usepackage[noEnd=true,indLines,rightComments=false]{algpseudocodex}
+\usepackage{xcolor}
+\usepackage{xspace}
+\definecolor{algcolor}{HTML}{2979FF}
+\definecolor{inputcolor}{rgb}{1, 0, 0}
+\definecolor{outputcolor}{rgb}{1, 0, 0}
+\definecolor{keywordcolor}{HTML}{80CBC4}
+
+\algnewcommand\algorithmicto{\textbf{to}}%
+\algnewcommand\algorithmicdownto{\textbf{down to}}%
+\algnewcommand\algorithmicforeach{\textbf{for each}}%
+\algnewcommand{\algorithmicdone}{\textbf{done}}%
+\newcommand{\AlgName}[1]{{\textcolor{algcolor}{#1}}}
+
+\makeatletter
+\algdef{SE}[FOREACH]{ForEach}{EndForEach}[1]{\algpx@startIndent\algpx@startCodeCommand\algorithmicforeach\ #1\ \algorithmicdo}{\algpx@endIndent\algpx@startCodeCommand\algorithmicend\ \algorithmicforeach}%
+\algdef{SE}[FORRANGE]{ForRange}{EndForRange}[3]{\algpx@startIndent\algpx@startCodeCommand\algorithmicfor\ #1\ \ensuremath{\gets}\ #2\ \algorithmicto\ #3\ \algorithmicdo}{\algpx@endIndent\algpx@startCodeCommand\algorithmicend\ \algorithmicfor}%
+\algdef{SE}[FORRANGEDOWN]{ForRangeDown}{EndForRangeDown}[3]{\algpx@startIndent\algpx@startCodeCommand\algorithmicfor\ #1\ \ensuremath{\gets}\ #2\ \algorithmicdownto\ #3\ \algorithmicdo}{\algpx@endIndent\algpx@startCodeCommand\algorithmicend\ \algorithmicfor}%
+\algdef{SE}[DONTIMES]{DoNTimes}{EndDoNTimes}[1]{\algpx@startIndent\algpx@startCodeCommand\algorithmicdo\ #1\ times}{\algpx@endIndent\algpx@startCodeCommand\algorithmicdone}%
+\ifbool{algpx@noEnd}{%
+    \algtext*{EndForEach}%
+    \algtext*{EndForRange}%
+    \algtext*{EndForRangeDown}%
+	\algtext*{EndDoNTimes}%
+    %
+      % end indent line after (not before), to get correct y position for multiline text in last command
+    \apptocmd{\EndForEach}{\algpx@endIndent}{}{}%
+    \apptocmd{\EndForRange}{\algpx@endIndent}{}{}%
+    \apptocmd{\EndForRangeDown}{\algpx@endIndent}{}{}%
+	\apptocmd{\EndDoNTimes}{\algpx@endIndent}{}{}%
+}{}%
+\pretocmd{\ForEach}{\algpx@endCodeCommand}{}{}
+\pretocmd{\ForRange}{\algpx@endCodeCommand}{}{}
+\pretocmd{\ForRangeDown}{\algpx@endCodeCommand}{}{}
+\pretocmd{\DoNTimes}{\algpx@endCodeCommand}{}{}
+
+% for end commands that may not be printed, tell endCodeCommand whether we are using noEnd
+\ifbool{algpx@noEnd}{%
+  \pretocmd{\EndForEach}{\algpx@endCodeCommand[1]}{}{}%
+  \pretocmd{\EndForRange}{\algpx@endCodeCommand[1]}{}{}%
+  \pretocmd{\EndForRangeDown}{\algpx@endCodeCommand[1]}{}{}%
+  \pretocmd{\EndDoNTimes}{\algpx@endCodeCommand[1]}{}{}%
+}{%
+\pretocmd{\EndForEach}{\algpx@endCodeCommand[0]}{}{}%
+\pretocmd{\EndForRange}{\algpx@endCodeCommand[0]}{}{}%
+\pretocmd{\EndForRangeDown}{\algpx@endCodeCommand[0]}{}{}%
+\pretocmd{\EndDoNTimes}{\algpx@endCodeCommand[0]}{}{}%
+}%
+\makeatother
+
+\renewcommand{\gets}{=}
+\newcommand{\equalto}{==}
+\newcommand{\notequalto}{\neq}
+
+\newcommand{\False}{\texttt{False}\xspace}
+\newcommand{\True}{\texttt{True}\xspace}
+\newcommand{\Null}{\texttt{Null}\xspace}
+\newcommand{\AlgInput}[1]{\Statex \textcolor{inputcolor}{\hspace*{\algorithmicindent}Input\phantom{O} \(\triangleright\)} #1}
+\newcommand{\AlgOutput}[1]{\Statex \textcolor{outputcolor}{\hspace*{\algorithmicindent}Output \(\triangleright\)} #1}
+\renewcommand*\Call[2]{\textproc{#1}\left(#2\right)}
+
+% Useful commands
+\newcommand{\set}[1]{\left\lbrace#1\right\rbrace}
+\newcommand{\suchthat}{\mid}
+\newcommand{\divides}{\mid}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\card}[1]{\left\lvert#1\right\rvert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\bigO}[1]{\mathcal{O}\left(#1\right)}
+\newcommand{\bigOm}[1]{\Omega\left(#1\right)}
+\newcommand{\bigTh}[1]{\Theta\left(#1\right)}
+\newcommand{\littleO}[1]{o\left(#1\right)}
+\newcommand{\littleOm}[1]{\omega\left(#1\right)}
+\newcommand{\nth}[1]{#1-th}
+
+% Tikz and PGF stuff
+\usepackage{tikz, pgfplots}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{shapes, shapes.misc, decorations, fit, backgrounds, positioning, patterns, shadows, calc, arrows, arrows.meta, trees}
+\tikzset{>={Latex[width=2mm,length=2mm]}}
+\newcommand\DoubleLine[7][4pt]{%
+    \path(#2)--(#3)coordinate[at start](h1)coordinate[at end](h2);
+    \draw[#4]($(h1)!#1!90:(h2)$)-- node [auto=left] {#5} ($(h2)!#1!-90:(h1)$); 
+    \draw[#6]($(h1)!#1!-90:(h2)$)-- node [auto=right] {#7} ($(h2)!#1!90:(h1)$);
+}
+\tikzset{arrowhead/.style=
+         {sloped,isosceles triangle,anchor=apex,fill=black,inner sep=2pt}}
+\tikzset{
+  point/.style={
+    draw,
+    circle,
+    inner sep=0pt,
+    outer sep=0pt,
+    minimum size=0.1cm,
+    fill
+  }
+}
+
+
+% Solution environment
+\newenvironment{solution}{\begin{proof}[\textnormal{\textbf{Solution}}]}{\end{proof}}
+
+
+% BELOW SHOULD ALWAYS BE AT END OF PREAMBLE
+% hyperlinks in document
+\usepackage[colorlinks=true, final]{hyperref}
+\usepackage[noabbrev,capitalize]{cleveref}
+\crefname{line}{line}{lines}

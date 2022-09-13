@@ -1,0 +1,54 @@
+\documentclass[final]{article}
+\usepackage{main}
+
+\title{A Small Pseudocode Tutorial}
+\author{Khalid Hourani}
+
+\begin{document}
+\section{What is Pseudocode?}
+Pseudocode is, essentially, non-executable code. The idea is to express an algorithm
+in language that is more precise than spoken word (e.g. American Standard English)
+but to not weigh yourself down with technical details that are not related to
+the overall algorithm design.
+
+For example, in order to compute the first $n$ Fibonacci numbers and store them
+in an array in the C programming language, then print them, one might write
+something like:
+
+\inputminted[
+    frame=lines,
+    bgcolor=lightgray,
+    linenos]{c}{fib.c}
+
+Notice how much superfluous information is here, at least with regards to what
+the algorithm actually does. There is a function prototype, a \mintinline{c}{malloc}
+call that serves only to acquire memory on the heap, there is a check of the
+\mintinline{c}{argc} value, etc. This code also has problems, such as not checking
+the return value of \mintinline{c}{fib_arr} (to see if memory was successfully
+allocated) and not considering what happens when $n$ does not fit within a single
+word in memory (or what happens when the Fibonacci Numbers get too large), and
+this can distract from the overall idea of the algorithm.
+
+On the other hand, the pseudocode for this might look something like:
+
+\begin{algorithm}[H]
+    \caption{Stores the first $n$ Fibonacci Numbers in an array and prints them.
+        Assume $n \geq 1$.}
+    \begin{algorithmic}[1]
+    \Function{Fib}{$n$}
+        \State $\texttt{fib-arr}$ is an empty array of length $n$
+        \State $\texttt{fib-arr}[0] \gets 0$
+        \State $\texttt{fib-arr}[1] \gets 1$
+        \ForRange{$i$}{2}{$n$}
+            \State $\texttt{fib-arr}[i] \gets \texttt{fib-arr}[i - 1] + \texttt{fib-arr}[i-2]$
+        \EndForRange
+
+        \State $\Call{print}{\texttt{fib-arr}}$
+    \EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+Notice that this pseudocode captures the idea of the algorithm without getting
+bogged down with unnecessary details. How memory is allocated, how to handle
+arbitrary-precision arithmetic, etc., are not relevant to this algorithm.
+\end{document}
